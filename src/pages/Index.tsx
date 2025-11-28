@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import Game3D from '@/components/Game3D';
+import MobileJoystick from '@/components/MobileJoystick';
 
 interface Block {
   x: number;
@@ -61,9 +63,13 @@ export default function Index() {
   ]);
   const [currentRoom, setCurrentRoom] = useState<string | null>(null);
   const [showUI, setShowUI] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [joystickMove, setJoystickMove] = useState({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    
     const initialBlocks: Block[] = [];
     for (let x = -5; x <= 5; x++) {
       for (let z = -5; z <= 5; z++) {
@@ -109,52 +115,6 @@ export default function Index() {
 
   const handleJoinRoom = (roomId: string) => {
     setCurrentRoom(roomId);
-  };
-
-  const render3DBlock = (block: Block, index: number) => {
-    const scale = 40;
-    const centerX = 400;
-    const centerY = 300;
-
-    const rotX = (rotation.x * Math.PI) / 180;
-    const rotY = (rotation.y * Math.PI) / 180;
-
-    const x = block.x * scale;
-    const y = -block.y * scale;
-    const z = block.z * scale;
-
-    const cosX = Math.cos(rotX);
-    const sinX = Math.sin(rotX);
-    const y1 = y * cosX - z * sinX;
-    const z1 = y * sinX + z * cosX;
-
-    const cosY = Math.cos(rotY);
-    const sinY = Math.sin(rotY);
-    const x2 = x * cosY + z1 * sinY;
-    const z2 = -x * sinY + z1 * cosY;
-
-    const perspective = 1000;
-    const screenX = centerX + (x2 * perspective) / (perspective + z2);
-    const screenY = centerY + (y1 * perspective) / (perspective + z2);
-    const size = (scale * perspective) / (perspective + z2);
-
-    return (
-      <div
-        key={index}
-        className="absolute block-shadow cursor-pointer hover:brightness-110 transition-all"
-        style={{
-          left: `${screenX}px`,
-          top: `${screenY}px`,
-          width: `${size}px`,
-          height: `${size}px`,
-          backgroundColor: block.color,
-          transform: 'translate(-50%, -50%)',
-          zIndex: Math.floor(1000 - z2),
-          border: '2px solid rgba(0,0,0,0.3)',
-        }}
-        onClick={() => handleRemoveBlock(block.x, block.y, block.z)}
-      />
-    );
   };
 
   if (!currentRoom) {
@@ -206,25 +166,14 @@ export default function Index() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-200 to-yellow-100 relative">
-      <div
-        ref={canvasRef}
-        className="absolute inset-0"
-        onMouseMove={e => {
-          if (e.buttons === 1) {
-            setRotation({
-              x: rotation.x + e.movementY * 0.5,
-              y: rotation.y + e.movementX * 0.5,
-            });
-          }
-        }}
-      >
-        <div className="relative w-full h-full">
-          {blocks.sort((a, b) => b.z - a.z).map((block, index) => render3DBlock(block, index))}
-        </div>
-
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-          <div className="w-8 h-8 border-4 border-white rounded-full opacity-50" />
-        </div>
+      <div className="absolute inset-0">
+        <Game3D
+          blocks={blocks}
+          selectedBlock={selectedBlock}
+          blockTypes={BLOCK_TYPES}
+          onAddBlock={handleAddBlock}
+          onRemoveBlock={handleRemoveBlock}
+        />
       </div>
 
       {showUI && (
@@ -349,21 +298,40 @@ export default function Index() {
           <div className="absolute top-4 right-4 z-50">
             <Card className="p-3 block-shadow bg-white/95 backdrop-blur">
               <div className="space-y-2 text-sm font-medium">
-                <div className="flex items-center gap-2">
-                  <Icon name="Mouse" size={16} className="text-primary" />
-                  <span>Зажми ЛКМ и двигай мышь - вращение</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Icon name="Hand" size={16} className="text-secondary" />
-                  <span>Клик на блок - удалить</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Icon name="Boxes" size={16} className="text-accent" />
-                  <span>Выбери блок внизу - построй</span>
-                </div>
+                {!isMobile ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Icon name="MousePointer" size={16} className="text-primary" />
+                      <span>Клик - захват мыши</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="Keyboard" size={16} className="text-secondary" />
+                      <span>WASD - движение</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="Mouse" size={16} className="text-accent" />
+                      <span>Мышь - обзор</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Icon name="Gamepad2" size={16} className="text-primary" />
+                      <span>Джойстик - движение</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="Hand" size={16} className="text-secondary" />
+                      <span>Свайп - обзор</span>
+                    </div>
+                  </>
+                )}
               </div>
             </Card>
           </div>
+
+          {isMobile && (
+            <MobileJoystick onMove={(x, y) => setJoystickMove({ x, y })} />
+          )}
         </>
       )}
     </div>
