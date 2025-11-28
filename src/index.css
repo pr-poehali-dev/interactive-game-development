@@ -6,39 +6,39 @@
 
 @layer base {
   :root {
-    --background: 200 100% 97%;
-    --foreground: 220 20% 15%;
+    --background: 45 100% 96%;
+    --foreground: 35 40% 20%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 15%;
+    --card: 48 100% 98%;
+    --card-foreground: 35 40% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 15%;
+    --popover: 48 100% 98%;
+    --popover-foreground: 35 40% 20%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 43 96% 56%;
+    --primary-foreground: 35 40% 20%;
 
-    --secondary: 262 83% 58%;
+    --secondary: 38 92% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 200 20% 90%;
-    --muted-foreground: 220 15% 40%;
+    --muted: 45 60% 88%;
+    --muted-foreground: 35 20% 45%;
 
-    --accent: 24 95% 53%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 30 100% 65%;
+    --accent-foreground: 35 40% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 200 20% 85%;
-    --input: 200 20% 85%;
-    --ring: 199 89% 48%;
+    --border: 45 40% 80%;
+    --input: 45 40% 80%;
+    --ring: 43 96% 56%;
 
     --radius: 0.75rem;
 
-    --game-green: 142 76% 36%;
-    --game-purple: 262 83% 58%;
-    --game-orange: 24 95% 53%;
+    --cheese-cheddar: 38 92% 50%;
+    --cheese-parmesan: 48 100% 70%;
+    --cheese-swiss: 45 95% 85%;
   }
 }
 

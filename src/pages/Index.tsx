@@ -37,12 +37,12 @@ interface Room {
 }
 
 const BLOCK_TYPES = [
-  { name: 'Grass', color: '#10B981', icon: 'Mountain' },
-  { name: 'Stone', color: '#6B7280', icon: 'Square' },
-  { name: 'Wood', color: '#92400E', icon: 'Trees' },
-  { name: 'Sand', color: '#FCD34D', icon: 'Waves' },
-  { name: 'Water', color: '#0EA5E9', icon: 'Droplet' },
-  { name: 'Lava', color: '#F97316', icon: 'Flame' },
+  { name: 'Чеддер', color: '#F59E0B', icon: 'Sparkles' },
+  { name: 'Пармезан', color: '#FDE047', icon: 'Star' },
+  { name: 'Моцарелла', color: '#FEFCE8', icon: 'Cloud' },
+  { name: 'Голубой сыр', color: '#93C5FD', icon: 'Snowflake' },
+  { name: 'Гауда', color: '#FB923C', icon: 'Circle' },
+  { name: 'Швейцарский', color: '#FEF3C7', icon: 'Disc' },
 ];
 
 export default function Index() {
@@ -51,13 +51,13 @@ export default function Index() {
   const [rotation, setRotation] = useState({ x: 30, y: 45 });
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 5, z: 0 });
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    { id: '1', user: 'Система', message: 'Добро пожаловать в игру!', timestamp: new Date() },
+    { id: '1', user: 'Система', message: 'Добро пожаловать в сырный мир!', timestamp: new Date() },
   ]);
   const [chatInput, setChatInput] = useState('');
   const [rooms, setRooms] = useState<Room[]>([
-    { id: '1', name: 'Стройка Мечты', players: 3, maxPlayers: 8 },
-    { id: '2', name: 'Приключения', players: 5, maxPlayers: 10 },
-    { id: '3', name: 'Творческий режим', players: 2, maxPlayers: 6 },
+    { id: '1', name: 'Сырная Долина', players: 3, maxPlayers: 8 },
+    { id: '2', name: 'Замок из Чеддера', players: 5, maxPlayers: 10 },
+    { id: '3', name: 'Пармезановый Рай', players: 2, maxPlayers: 6 },
   ]);
   const [currentRoom, setCurrentRoom] = useState<string | null>(null);
   const [showUI, setShowUI] = useState(true);
@@ -71,8 +71,8 @@ export default function Index() {
           x,
           y: 0,
           z,
-          color: '#10B981',
-          type: 'Grass',
+          color: '#F59E0B',
+          type: 'Чеддер',
         });
       }
     }
@@ -159,11 +159,11 @@ export default function Index() {
 
   if (!currentRoom) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-sky-400 via-sky-300 to-sky-200 p-8">
+      <div className="min-h-screen bg-gradient-to-b from-amber-200 via-yellow-100 to-amber-50 p-8">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center space-y-4">
-            <h1 className="text-6xl font-bold text-white drop-shadow-lg">🎮 BlockWorld</h1>
-            <p className="text-2xl text-white font-semibold">Строй, играй, исследуй вместе с друзьями!</p>
+            <h1 className="text-6xl font-bold text-amber-900 drop-shadow-lg">🧀 CheeseWorld</h1>
+            <p className="text-2xl text-amber-800 font-semibold">Строй сырные миры вместе с друзьями!</p>
           </div>
 
           <Card className="p-8 block-shadow bg-white">
@@ -172,7 +172,7 @@ export default function Index() {
               {rooms.map(room => (
                 <Card
                   key={room.id}
-                  className="p-6 hover:scale-105 transition-transform cursor-pointer block-shadow-sm bg-gradient-to-br from-white to-sky-50"
+                  className="p-6 hover:scale-105 transition-transform cursor-pointer block-shadow-sm bg-gradient-to-br from-amber-50 to-yellow-50"
                   onClick={() => handleJoinRoom(room.id)}
                 >
                   <div className="space-y-3">
@@ -205,7 +205,7 @@ export default function Index() {
   }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-sky-400 to-sky-300 relative">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-200 to-yellow-100 relative">
       <div
         ref={canvasRef}
         className="absolute inset-0"
